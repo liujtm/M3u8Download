@@ -187,6 +187,11 @@ class M3u8Download:
         合并.ts文件，输出mp4格式视频，需要ffmpeg
         本来也可以直接用 输入的m3u 网址 作为ffmpeg的参数，直接下载和转mp4；但缺乏断点续传、多线程功能；
         所以本代码是先把m3u内的文件下载到本地，并且修改m3u文件内容，指向本地；最后采用本地m3u给 ffmpeg 转码
+        
+        先原文件右键查看详情，查看分辨率，然后等比例除以一个系数，用于下列scale参数. vf 代表 video filter
+        压缩命令，转为宽度640高度360分辨率： ffmpeg -i "input.mp4"  -vf scale=640:360 "out.mp4"
+
+        压缩命令，转为宽度640高度自动计算： ffmpeg -i "input.mp4"  -vf scale=640:-1  "out.mp4"
         """
         cmd = f"ffmpeg -allowed_extensions ALL -i '{self._file_path}.m3u8' -acodec \
         copy -vcodec copy -f mp4 '{self._file_path}.mp4'"
